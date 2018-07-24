@@ -49,4 +49,14 @@ class BoxListManager:
         for entry in li.imagetools.boxing.boxListManager.BoxListManager.theList:
             print json.dumps(vars(entry),sort_keys=True, indent=4)
 
+    def toFile(self, file_name):
+        outlist = []
+        for entry in li.imagetools.boxing.boxListManager.BoxListManager.theList:
+            imagepath = entry.image_path
+            rects=[]
+            for rect in entry.boxList :
+                rects.append({'x1':rect['x1'], 'x2':rect['x2'], 'y1':rect['y1'], 'y2':rect['y2']})
+            outlist.append({"image_path":imagepath, "rects": rects})
+        with open(file_name, 'w') as outfile:
+            json.dump(outlist, outfile, sort_keys=True, indent=4)
 

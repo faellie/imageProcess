@@ -19,7 +19,7 @@ boxes = []
 boxpatches = []
 
 
-def zoom_factory(ax,base_scale = 2.):
+def zoom_factory(ax,base_scale = 1.2):
     def zoom_fun(event):
         # get the current x and y limits
         cur_xlim = ax.get_xlim()
@@ -130,12 +130,18 @@ def save(event):
     boxpatches = [];
     plt.close()
 
+
+def next(event):
+    plt.close()
+
 li.imagetools.boxing.boxListManager.BoxListManager.clear()
-PATH_TO_TEST_IMAGES_DIR = '/users/zihuangw/doc/personal/LI/Images'
-TEST_IMAGE_PATHS = [ os.path.join(PATH_TO_TEST_IMAGES_DIR, '{}.jpg'.format(i)) for i in range(1, 3) ]
+PATH_TO_TEST_IMAGES_DIR = '/opt/TF/input/image/raw/png'
+mage_files = [ os.path.join(PATH_TO_TEST_IMAGES_DIR, 'out_{}.png'.format(i)) for i in range(41, 42) ]
 
+# PATH_TO_TEST_IMAGES_DIR = '/opt/TF/input/image/raw/png'
+#mage_files = [os.path.join(PATH_TO_TEST_IMAGES_DIR, f) for f in os.listdir(PATH_TO_TEST_IMAGES_DIR) if os.path.isfile(os.path.join(PATH_TO_TEST_IMAGES_DIR, f))]
 
-for image_path in TEST_IMAGE_PATHS:
+for image_path in mage_files:
     li.imagetools.boxing.boxListManager.BoxListManager.setCurrentImage(image_path)
     image = Image.open(image_path)
     image_np = load_image_into_numpy_array(image)
@@ -167,6 +173,13 @@ for image_path in TEST_IMAGE_PATHS:
 
     savebutton.on_clicked(save)
 
+    nextbutton = Button(plt.axes([0.1, 1.00, 0.1, 0.04]), 'Next', color='g', hovercolor='0.975')
+
+
+    nextbutton.on_clicked(next)
+
+
     plt.show()
 bm = li.imagetools.boxing.boxListManager.BoxListManager();
-bm.toStr()
+bm.toFile(os.path.join(PATH_TO_TEST_IMAGES_DIR , 'out.json'))
+
