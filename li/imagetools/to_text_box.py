@@ -7,7 +7,7 @@ import glob
 #import pandas as pd
 import xml.etree.ElementTree as ET
 import cv2
-
+import imutils
 
 def make_sure_path_exists(path):
     try:
@@ -63,15 +63,25 @@ def to_text_box(path):
             # value[3] is the class
             indexes[value[3]] = indexes[value[3]] + 1;
             outputpath=os.path.join(path, 'out', value[3], str(indexes[value[3]]) + '.jpg')
+            y1 = value[5]
+            y2 = value[7]
+            x1 = value[4]
+            x2 = value[6]
             newImage = image[value[5]:value[7], value[4]:value[6], :]
+            if(y2 - y1 < x2 - x1) :
+                newImage  = imutils.rotate_bound(newImage, 90)
             print("writing to ", outputpath)
+            #resize (width = 24 hight = 36)
+            newImage = cv2.resize(newImage, (24, 36), cv2.INTER_AREA)
+            #change to grey
+            newImage = cv2.cvtColor(newImage,cv2.COLOR_BGR2GRAY)
             cv2.imwrite(outputpath, newImage)
     return
 
 
 def main():
     #image_path = '/opt/TF/test/FullSet/eval'
-    image_path = '/opt/TF/data/test'
+    image_path = '/opt/TF/data/testfull'
     to_text_box(image_path)
     #xml_df.to_csv(image_path + '/train.csv', index=None)
     #xml_df.to_csv(image_path + '/eval.csv', index=None)
